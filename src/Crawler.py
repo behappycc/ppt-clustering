@@ -71,7 +71,7 @@ def main(cmdline=None):
             last_time = last_time['last_time']
         else:
             last_time = datetime.fromtimestamp(0)
-
+        print last_time
         # update last time
         conn['Ptt']['last_time'].insert_one({
             'board'     : board, 
@@ -88,7 +88,7 @@ def main(cmdline=None):
             return
         
         # find first page index
-        soup = BeautifulSoup(resp.text)
+        soup = BeautifulSoup(resp.text, 'html.parser')
         div = soup.find_all("div", "btn-group pull-right")[0]
         href = div.find_all('a')[1]['href']
         pattern = u'/(.+)/(.+)/index(\d+).html'
@@ -98,7 +98,7 @@ def main(cmdline=None):
 
         # parsePage(collection, board, last_index, last_time)
         for index in range(last_index, 0, -1):
-            if parsePage(collection, index, last_time):
+            if parsePage(collection, board, index, last_time):
                 return 
 
     elif args.i:
@@ -127,7 +127,7 @@ def parsePage(collection, board, index, last_time):
         logger.warning('invalid url: ' + resp.url)
         return 
     
-    soup = BeautifulSoup(resp.text)
+    soup = BeautifulSoup(resp.text, 'html.parser')
     divs = soup.find_all("div", "r-ent")
     divs = divs[::-1]
     
@@ -142,6 +142,7 @@ def parsePage(collection, board, index, last_time):
             date = data['date']
 
             if date < last_time:
+                print "data < last_time"
                 return True
 
             insert(collection, data)
@@ -166,7 +167,7 @@ def parse(link, article_id, board):
         # return json.dumps({"error": "invalid url"}, indent=4, sort_keys=True, ensure_ascii=False)
         return None
     
-    soup = BeautifulSoup(resp.text)
+    soup = BeautifulSoup(resp.text, 'html.parser')
     main_content = soup.find(id="main-content")
     metas = main_content.select('div.article-metaline')
     author = ''
