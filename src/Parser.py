@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import jieba
+import jieba.posseg as pseg
 import extraDict
 import operator
+from gensim import corpora, models, similarities  
 
 jieba.load_userdict("gossipingDict.txt")
 
@@ -20,52 +22,73 @@ def wordFrequency(words, wordLen, wordTop):
             highFreqWord.append(ele)
     return highFreqWord[:wordTop]
 
-#string = "台中"
-#print type(string), type(string.decode('utf-8')), string.decode('utf-8')
+def topicModel(listArticleTitle):
+    jieba.load_userdict("gossipingDict.txt")
+    listSentence = []
+    sentence1 = "台中你是一個三寶三寶飯！"
+    sentence2 = "馬總統蔡英文"
+    sentence3 = "台灣大學電機系"
+    sentence4 = "獨立音樂需要大家一起來推廣，歡迎加入我們的行列！"
+    sentence5 = "我沒有心我沒有真實的自我我只有消瘦的臉孔所謂軟弱所謂的順從一向是我的座右銘"
+    listSentence.append(sentence1)
+    listSentence.append(sentence2)
+    listSentence.append(sentence3)
+    listSentence.append(sentence4)
+    listSentence.append(sentence5)
 
-def readIP(filename, userIP):
-    listData = []
-    listIP = []
-    with open(filename, 'r') as datafile:
-        for line in datafile:
-            listData.append(line)
-    for data in listData:      
-        temp = data.split(' ')
-        if '~' not in temp[1]:
-            school = []
-            school.append(temp[0])
-            school.append(temp[1])
-            school.append(temp[2])
-            listIP.append(school)
-        else:
-            tempIP1 = temp[1].split('.')
-            tempIP2 = tempIP1[2].split('~')
-            for i in xrange(int(tempIP2[0]), int(tempIP2[1])+1):
-                school = []
-                school.append(temp[0])
-                school.append(tempIP1[0] + '.' + tempIP1[1] + '.' + str(i))
-                school.append(temp[2])
-                listIP.append(school)
 
-    listSchool = []
-    for ip in listIP:     
-        if userIP.startswith(ip[1]):
-            listSchool.append(ip)
-            #print ip[0], ip[1]
-    if len(listSchool) == 1:
-        #print listSchool[0][0], listSchool[0][1]
-        return listSchool
-    else:
-        ipLength = 0
-        index = 0
-        for i, j in enumerate(listSchool):
-            if len(j[1]) > ipLength:
-                ipLength = len(j[1])
-                index = i
-        #print listSchool[i][0], listSchool[i][1]
-        return listSchool[i]
-        
+    nWordAll = []
+    for sentence in listSentence:
+        words = pseg.cut(sentence)
+        nWord = ['']
+        for word, flag in words:
+            #print word
+            if((flag == 'n'or flag == 'v' or flag == 'a' or flag == 'nz' or flag == 'ns' or flag == 'nt' or flag == 'nz') and len(word)>1):
+                    print word
+                    nWord.append(word)
+        nWordAll.append(nWord)
+
+    print "nWordAll\n", nWordAll
+    dictionary = corpora.Dictionary(nWordAll)
+    print "dictionary\n", dictionary
+    corpus = [dictionary.doc2bow(text) for text in nWordAll]
+    print "corpus\n", corpus
+
+    tfidf = models.TfidfModel(corpus)
+    print "tfidf", tfidf
+    corpus_tfidf = tfidf[corpus]
+    print "corpus_tfidf", corpus_tfidf
+    lda = models.ldamodel.LdaModel(corpus=corpus_tfidf, id2word=dictionary, alpha='auto', num_topics=10)
+    print "lda", lda
+    corpus_lda = lda[corpus_tfidf]
+    for doc in corpus_lda:
+        print doc
+
+    query = u"台灣 大學"
+    x = query.split( )
+    query_bow = dictionary.doc2bow(x)
+    print query_bow
+
+    query_lda = lda[query_bow]
+    print query_lda
+
+    a = list(sorted(lda[query_bow], key = lambda x : x[1]))
+    print a[0]
+    print a[-1]
+    #least related
+    print lda.print_topic(a[0][0])
+    #most related
+    print lda.print_topic(a[-1][0])
+
+
+    '''
+    for i in range(0, 10):
+        for j in lda.print_topics(i)[0]:
+            print j
+    '''    
 def main():
+    topicModel(123)
+    '''
     sentence = "台中你是一個三寶三寶三寶三寶飯台中！"
     print "Input：", sentence
     words = jieba.cut(sentence, cut_all=False)
@@ -77,8 +100,10 @@ def main():
     print a[0][0], a[0][1]
     print a[1][0], a[1][1]
 
-    school = readIP('school.csv', '140.127.36.8')
-    print school[0][0], school[0][1], school[0][2]
+    school = findIP_School(u"203.71.88.102")
+    print school['school'], school['place']
+    '''
+    pass
 
 if __name__ == '__main__':
     main()
