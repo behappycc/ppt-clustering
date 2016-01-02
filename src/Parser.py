@@ -23,47 +23,14 @@ def wordFrequency(words, wordLen, wordTop):
     return highFreqWord[:wordTop]
 
 def topicModel():
-
-    listSentence = []
-    sentence1 = "台中你是一個三寶三寶飯！"
-    sentence2 = "馬總統蔡英文"
-    sentence3 = "台灣大學電機系"
-    sentence4 = "獨立音樂需要大家一起來推廣，歡迎加入我們的行列！"
-    sentence5 = "我沒有心我沒有真實的自我我只有消瘦的臉孔所謂軟弱所謂的順從一向是我的座右銘"
-    listSentence.append(sentence1)
-    listSentence.append(sentence2)
-    listSentence.append(sentence3)
-    listSentence.append(sentence4)
-    listSentence.append(sentence5)
-
-    
-    nWordAll = []
-    for sentence in listSentence:
-        words = pseg.cut(sentence)
-        nWord = []
-        for word, flag in words:
-            #print word
-            if(flag in ['n', 'v', 'a', 'ns', 'nt', 'nz']) and (len(word)>1):
-                    nWord.append(word)
-        nWordAll.append(nWord)
-
-    '''
-    dictionary = corpora.Dictionary(nWordAll)
-    corpus = [dictionary.doc2bow(text) for text in nWordAll]
-
-    tfidf = models.TfidfModel(corpus)
-    corpus_tfidf = tfidf[corpus]
-    lda = models.ldamodel.LdaModel(corpus=corpus_tfidf, id2word=dictionary, alpha='auto', num_topics=10)
-    lda.save('gossiping_topic.model')
-    '''
     dictionary = corpora.dictionary.Dictionary.load('Gossiping/Gossiping_dict.model')
     lda = models.ldamodel.LdaModel.load('Gossiping/Gossiping_lda.model')
-    for i in range(50):
-        print lda.print_topic(i)
+    with open("topic", 'w+') as datafile:
+        for i in range(50):
+            datafile.write(str(i) + " " + lda.print_topic(i).encode("utf-8") + '\n')
 
-    sentence = "故宮南院龍馬獸首是統戰？ 2青年潑"
-    sentence = sentence.split("[", 1)[0]
-
+    
+    '''
     nWord = []
     for word, flag in pseg.cut(sentence):
         if(flag in ['n', 'v', 'a', 'ns', 'nt', 'nz']) and (len(word)>1):
@@ -76,6 +43,7 @@ def topicModel():
     topic = lda.print_topic(topic_guess[-1][0])
     
     print topic_guess[-1][0], ",", topic
+    '''
     '''
     #word2vec
     model = models.Word2Vec(nWordAll, min_count=1)

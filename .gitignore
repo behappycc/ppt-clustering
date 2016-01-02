@@ -60,5 +60,5 @@ target/
 Account.py
 
 #model
-.model
-.state
+*.model
+*.state
