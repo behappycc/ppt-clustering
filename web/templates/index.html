@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang>
+<head prefix>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ptt clustering</title>
+
+<!-- libraries-->
+<script src="http://code.jquery.com/jquery.min.js"></script>
+<script src ="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script type="text/javascript" src="http://bost.ocks.org/mike/fisheye/fisheye.js?0.0.3"></script>
+<script type="text/javascript" src="static/js/index.js"></script>
+
+<!-- custom files-->
+
+<!--CSS-->
+<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link type="text/css" rel="stylesheet" href="static/css/materialize.min.css"  media="screen,projection"/>
+<link href="static/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+</head>
+<body>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="static/js/materialize.min.js"></script>
+
+
+<nav class="white" role="navigation">
+    <div class="nav-wrapper container">
+      <a id="logo-container" href="#" class="brand-logo">Ptt clustering</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="#">Nav</a></li>
+      </ul>
+
+      <ul id="nav-mobile" class="side-nav">
+        <li><a href="#">Nav</a></li>
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+  <div id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <br><br>
+        <h1 class="header center teal-text text-lighten-2">Ptt-c</h1>
+        <div class="row center">
+          <h5 class="header col s12 light">ptt-c</h5>
+        </div>
+        <div class="row center">
+          <a id="download-button" class="btn-large waves-effect waves-light teal lighten-1">go</a>
+        </div>
+        <br><br>
+
+      </div>
+    </div>
+    <div class="parallax"><img src="static/images/image1.jpg" alt="Unsplashed background img 1"></div>
+  </div>
+
+  <div class="container">
+    <div class="section">
+      <!--   Icon Section   -->
+      <div class="row">
+        <div class="col s12 m4">
+          <div class="icon-block">
+            <h2 class="center brown-text"><i class="material-icons">settings_power</i></h2>
+            <h5 class="center">hi</h5>
+
+            <p class="light">hi
+          </div>
+        </div>
+
+        <div class="col s12 m4">
+          <div class="icon-block">
+            <h2 class="center brown-text"><i class="material-icons">settings_power</i></h2>
+            <h5 class="center">hi</h5>
+
+            <p class="light">hi</p>
+          </div>
+        </div>
+
+        <div class="col s12 m4">
+          <div class="icon-block">
+            <h2 class="center brown-text"><i class="material-icons">settings_power</i></h2>
+            <h5 class="center">hi</h5>
+
+            <p class="light">hi</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="parallax-container valign-wrapper">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <div class="row center">
+          <h5 class="header col s12 light">hi</h5>
+        </div>
+      </div>
+    </div>
+    <div class="parallax"><img src="static/images/image1.jpg" alt="Unsplashed background img 2"></div>
+  </div>
+
+  <div class="container">
+    <div class="section">
+
+      <div class="row">
+        <div class="col s12 center">
+          <h3><i class="mdi-content-send brown-text"></i></h3>
+          <h4>hi</h4>
+          <p class="left-align light">hi</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="parallax-container valign-wrapper">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <div class="row center">
+          <h5 class="header col s12 light">hi</h5>
+        </div>
+      </div>
+    </div>
+    <div class="parallax"><img src="static/images/image2.jpg" alt="Unsplashed background img 3"></div>
+  </div>
+
+    <a class="waves-effect waves-light btn" type="button" id = "btn_Run">buttonyo</a>
+    <a class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>button</a>
+    <a class="waves-effect waves-light btn"><i class="material-icons right">cloud</i>button</a>
+
+    <div class="container">
+    <div class="span12">
+        <div id="sdcontainer">
+            <form class="well form-inline">
+
+                <input id="input1" type="text" class="input" placeholder="This text will get returned">
+                <input id="input2" type="text" class="input" placeholder="This text won't">
+
+                <button id="runajax" class="btn btn-primary">Run</button>
+            </form>
+            <span id="responsefield"></span>
+
+
+        </div>
+    </div>
+    </div>
+
+
+  <svg width="100%" height="400px" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid"></svg>
+  <div id="info"><div id="name"></div>
+  <div id="density"></div>
+  <div id="unit">( 人 / km<sup>2</sup> )</div>
+  </div>
+  <h1>first D3</h1>
+  <script type="text/javascript">
+
+</script>
+      <ul>
+       {% for ab in abc %}
+         <li>{{ escape(ab) }}</li>
+       {% end %}
+     </ul>
+
+  <footer class="page-footer teal">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <h5 class="white-text">hi</h5>
+          <p class="grey-text text-lighten-4">hi</p>
+
+
+        </div>
+        <div class="col l3 s12">
+          <h5 class="white-text">hi</h5>
+          <ul>
+            <li><a class="white-text" href="#!">Link 1</a></li>
+            <li><a class="white-text" href="#!">Link 2</a></li>
+            <li><a class="white-text" href="#!">Link 3</a></li>
+          </ul>
+        </div>
+        <div class="col l3 s12">
+          <h5 class="white-text">hi</h5>
+          <ul>
+            <li><a class="white-text" href="#!">Link 1</a></li>
+            <li><a class="white-text" href="#!">Link 2</a></li>
+            <li><a class="white-text" href="#!">Link 3</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      Made by <a class="brown-text text-lighten-3" href="pttclustering.me">rice, hubert</a>
+      </div>
+    </div>
+  </footer>
+
+  </body>
+</html>

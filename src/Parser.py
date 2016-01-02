@@ -22,8 +22,8 @@ def wordFrequency(words, wordLen, wordTop):
             highFreqWord.append(ele)
     return highFreqWord[:wordTop]
 
-def topicModel(listArticleTitle):
-    jieba.load_userdict("gossipingDict.txt")
+def topicModel():
+
     listSentence = []
     sentence1 = "台中你是一個三寶三寶飯！"
     sentence2 = "馬總統蔡英文"
@@ -36,73 +36,62 @@ def topicModel(listArticleTitle):
     listSentence.append(sentence4)
     listSentence.append(sentence5)
 
-
+    
     nWordAll = []
     for sentence in listSentence:
         words = pseg.cut(sentence)
-        nWord = ['']
+        nWord = []
         for word, flag in words:
             #print word
-            if((flag == 'n'or flag == 'v' or flag == 'a' or flag == 'nz' or flag == 'ns' or flag == 'nt' or flag == 'nz') and len(word)>1):
-                    print word
+            if(flag in ['n', 'v', 'a', 'ns', 'nt', 'nz']) and (len(word)>1):
                     nWord.append(word)
         nWordAll.append(nWord)
 
-    print "nWordAll\n", nWordAll
+    '''
     dictionary = corpora.Dictionary(nWordAll)
-    print "dictionary\n", dictionary
     corpus = [dictionary.doc2bow(text) for text in nWordAll]
-    print "corpus\n", corpus
 
     tfidf = models.TfidfModel(corpus)
-    print "tfidf", tfidf
     corpus_tfidf = tfidf[corpus]
-    print "corpus_tfidf", corpus_tfidf
     lda = models.ldamodel.LdaModel(corpus=corpus_tfidf, id2word=dictionary, alpha='auto', num_topics=10)
-    print "lda", lda
-    corpus_lda = lda[corpus_tfidf]
-    for doc in corpus_lda:
-        print doc
-
-    query = u"台灣 大學"
-    x = query.split( )
-    query_bow = dictionary.doc2bow(x)
-    print query_bow
-
-    query_lda = lda[query_bow]
-    print query_lda
-
-    a = list(sorted(lda[query_bow], key = lambda x : x[1]))
-    print a[0]
-    print a[-1]
-    #least related
-    print lda.print_topic(a[0][0])
-    #most related
-    print lda.print_topic(a[-1][0])
-
-
+    lda.save('gossiping_topic.model')
     '''
-    for i in range(0, 10):
-        for j in lda.print_topics(i)[0]:
-            print j
-    '''    
+    dictionary = corpora.dictionary.Dictionary.load('Gossiping/Gossiping_dict.model')
+    lda = models.ldamodel.LdaModel.load('Gossiping/Gossiping_lda.model')
+    for i in range(50):
+        print lda.print_topic(i)
+
+    sentence = "故宮南院龍馬獸首是統戰？ 2青年潑"
+    sentence = sentence.split("[", 1)[0]
+
+    nWord = []
+    for word, flag in pseg.cut(sentence):
+        if(flag in ['n', 'v', 'a', 'ns', 'nt', 'nz']) and (len(word)>1):
+            nWord.append(word)
+    sentence = nWord
+    corpus = dictionary.doc2bow(sentence)
+    topic_guess = lda.get_document_topics(corpus)
+    topic_guess = list(sorted(topic_guess, key = lambda x : x[1]))
+    topicid = topic_guess[-1][0]
+    topic = lda.print_topic(topic_guess[-1][0])
+    
+    print topic_guess[-1][0], ",", topic
+    '''
+    #word2vec
+    model = models.Word2Vec(nWordAll, min_count=1)
+    model.save('word2vec_model.model')
+
+    #print model[u'台灣']
+    sim = model.most_similar(positive=[u'台灣大學'])
+    for s in sim:  
+        print "word:%s,similar:%s " %(s[0],s[1])
+
+    for w in model.most_similar(u'台灣大學'):
+        print w[0], w[1], 'hi'
+    '''
+      
 def main():
-    topicModel(123)
-    '''
-    sentence = "台中你是一個三寶三寶三寶三寶飯台中！"
-    print "Input：", sentence
-    words = jieba.cut(sentence, cut_all=False)
-    #print "Output Full Mode："
-    #for word in words:
-    #    print word
-
-    a = wordFrequency(words, 2, 2)
-    print a[0][0], a[0][1]
-    print a[1][0], a[1][1]
-
-    school = findIP_School(u"203.71.88.102")
-    print school['school'], school['place']
-    '''
+    topicModel()
     pass
 
 if __name__ == '__main__':

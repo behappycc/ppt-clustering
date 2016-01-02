@@ -4,6 +4,7 @@ import re
 import sys
 import json
 import requests
+requests.packages.urllib3.disable_warnings()
 import argparse
 import time
 import codecs
@@ -56,7 +57,7 @@ def main(cmdline=None):
         args = parser.parse_args(cmdline)
     else:
        args = parser.parse_args()
-    board = args.b
+    board = args.b 
 
     # build mongodb
     conn = MongoClient('localhost', 27017)
@@ -67,16 +68,22 @@ def main(cmdline=None):
 
         # check last time
         last_time = conn['Ptt']['last_time'].find_one({'board': board})
+        
         if last_time:
             last_time = last_time['last_time']
+            logger.info("last_time: " + repr(last_time))
+            conn['Ptt']['last_time'].update(
+                {'board': board},
+                {'$set':{'last_time': datetime.now()}}
+            )
         else:
             last_time = datetime.fromtimestamp(0)
-        print last_time
         # update last time
-        conn['Ptt']['last_time'].insert_one({
-            'board'     : board, 
-            'last_time' : datetime.now()
-        })
+            conn['Ptt']['last_time'].insert_one({
+                'board'     : board, 
+                'last_time' : datetime.now()
+            })
+        logger.info("update lastime" + repr(datetime.now()))
 
         resp = requests.get(
             url='https://www.ptt.cc/bbs/' + board + '/index.html',
@@ -94,7 +101,6 @@ def main(cmdline=None):
         pattern = u'/(.+)/(.+)/index(\d+).html'
         last_index = re.match(pattern, href).group(3)
         last_index = int(last_index) + 1 
-        print last_index
 
         # parsePage(collection, board, last_index, last_time)
         for index in range(last_index, 0, -1):
@@ -105,7 +111,7 @@ def main(cmdline=None):
         start = args.i[0]
         end = args.i[1]
         index = start
-        print start, end
+
         for index in range(start, end+1):
             if parsePage(collection, board, index, datetime.fromtimestamp(0)):
                 return 
@@ -115,7 +121,10 @@ def main(cmdline=None):
         link = PTT_URL + '/bbs/' + board + '/' + article_id + '.html'
         insert(collection, parse(link, article_id, board))
 
+overtime_flag = 0
+max_overtime = 6
 def parsePage(collection, board, index, last_time):
+    global overtime_flag
 
     PTT_URL = 'https://www.ptt.cc'
     logger.info('Processing index: ' + str(index))
@@ -142,9 +151,14 @@ def parsePage(collection, board, index, last_time):
             date = data['date']
 
             if date < last_time:
-                print "data < last_time"
-                return True
+                overtime_flag += 1
+                logger.info("date < last_time " + str(overtime_flag))
 
+                if overtime_flag > max_overtime:
+                    return True
+                else:
+                    continue
+            
             insert(collection, data)
             
         except:
@@ -175,6 +189,8 @@ def parse(link, article_id, board):
     date = ''
     if metas:
         author = metas[0].select('span.article-meta-value')[0].string if metas[0].select('span.article-meta-value')[0] else author
+        account, nickname = author.split(" ", 1)
+        author = {'account': account, 'nickname': nickname.strip("()")}
         title = metas[1].select('span.article-meta-value')[0].string if metas[1].select('span.article-meta-value')[0] else title
         date = metas[2].select('span.article-meta-value')[0].string if metas[2].select('span.article-meta-value')[0] else date
 

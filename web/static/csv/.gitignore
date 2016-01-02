@@ -56,9 +56,8 @@ docs/_build/
 # PyBuilder
 target/
 
-# Account
-Account.py
+#word2vec
+*.model
 
-#model
-.model
-.state
+#csv
+*.csv
