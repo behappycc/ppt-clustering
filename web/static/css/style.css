@@ -55,3 +55,39 @@ p {
 footer.page-footer {
   margin: 0;
 }
+
+path {
+  cursor: pointer;
+}
+
+footer {
+  color: #000000;
+}
+
+#wrapper {
+  margin-right: 200px;
+}
+
+#Taiwan {
+  float: left;
+  width: 100%;
+  background-color: #ffffff ;
+}
+
+#TaiwanInfo {
+  float: right;
+  width: 200px;
+  margin-right: -200px;
+}
+
+#cleared {
+  clear: both;
+}
+
+#name {
+  font-size: 1.2em;
+}
+
+#unit {
+  font-size: 18px;
+}

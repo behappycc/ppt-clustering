@@ -7,17 +7,19 @@
 
 <!-- libraries-->
 <script src="http://code.jquery.com/jquery.min.js"></script>
+<script src="static/js/d3.min.js"></script>
+<script src="static/js/topojson.js"></script>
+<!--
 <script src ="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/topojson.v1.min.js"></script>
-<script type="text/javascript" src="static/js/user.js"></script>
-
+-->
 <!-- custom files-->
 
 <!--CSS-->
 <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link type="text/css" rel="stylesheet" href="static/css/materialize.min.css"  media="screen,projection"/>
 <link href="static/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-
+<link rel="shortcut icon" href="static/images/favicon.ico" />
 </head>
 <body>
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -26,26 +28,29 @@
 
 <nav class="white" role="navigation">
     <div class="nav-wrapper container">
-      <a id="logo-container" href="#" class="brand-logo">Ptt clustering</a>
+      <a id="logo-container" href="/index" class="brand-logo">Ptt clustering</a>
       <ul class="right hide-on-med-and-down">
-        <li><a href="#">Topic</a></li>
-        <li><a href="#">User</a></li>
+        <li><a href="/chart">Topic</a></li>
+        <li><a href="/user">Search User</a></li>
       </ul>
 
       <ul id="nav-mobile" class="side-nav">
-        <li><a href="#">Topic</a></li>
-        <li><a href="#">User</a></li>
+        <li><a href="/chart">Topic</a></li>
+        <li><a href="/user">Search User</a></li>
       </ul>
       <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
     </div>
   </nav>
 
+  <div class="container">
   <!-- user id -->
   <form class="well form-inline" action="/user" method="post">
       <input id="username" name="username"  type="text" class="input" placeholder="user id">
       <button id="searchUser" class="btn btn-primary">Search user</button>
   </form>
+  </div>
 
+  <div class="container">
   <h3 class="header center black-text">{{ username }}</h3>
     <table class="bordered">
         <thead>
@@ -53,47 +58,19 @@
         {% for record in records %}
         <tbody>
           <tr>
-            <td>{{record['article_title']}}</td>
+            <td><a href="https://www.ptt.cc/bbs/{{record['board']}}/{{record['article_id']}}.html">{{record['article_title']}}</a></td>
             <td>{{record['date']}}</td>
           </tr>
           </tr>
         </tbody>
         {% end %}
       </table>
+  </div>
 
-  <footer class="page-footer teal">
-    <div class="container">
-      <div class="row">
-        <div class="col l6 s12">
-          <h5 class="white-text">hi</h5>
-          <p class="grey-text text-lighten-4">hi</p>
-
-
-        </div>
-        <div class="col l3 s12">
-          <h5 class="white-text">hi</h5>
-          <ul>
-            <li><a class="white-text" href="#!">Link 1</a></li>
-            <li><a class="white-text" href="#!">Link 2</a></li>
-            <li><a class="white-text" href="#!">Link 3</a></li>
-          </ul>
-        </div>
-        <div class="col l3 s12">
-          <h5 class="white-text">hi</h5>
-          <ul>
-            <li><a class="white-text" href="#!">Link 1</a></li>
-            <li><a class="white-text" href="#!">Link 2</a></li>
-            <li><a class="white-text" href="#!">Link 3</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="footer-copyright">
-      <div class="container">
-      Made by <a class="brown-text text-lighten-3" href="pttclustering.me">rice, hubert</a>
-      </div>
-    </div>
-  </footer>
+  <div id="footer">
+    <p> </p>
+    <center>© 2016 Rice, Hubert</center>
+  </div>
 
   </body>
 </html>

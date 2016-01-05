@@ -29,27 +29,30 @@ def labelTopic(board):
     articles = collection.find()
 
     for article in articles:
-        title = article['article_title']
-        title_tokens = splitWord(title)
-        corpus = dictionary.doc2bow(title_tokens)
-        topic_guess = lda.get_document_topics(corpus)
-        topic_guess = list(sorted(topic_guess, key = lambda x : x[1]))
-        topicid = topic_guess[-1][0]
-        topic = lda.print_topic(topic_guess[-1][0])
+        if 'topicid' not in article:
+            print article['article_title']
+            title = article['article_title']
+            title_tokens = splitWord(title)
+            corpus = dictionary.doc2bow(title_tokens)
+            topic_guess = lda.get_document_topics(corpus)
+            topic_guess = list(sorted(topic_guess, key = lambda x : x[1]))
+            topicid = topic_guess[-1][0]
+            topic = lda.print_topic(topic_guess[-1][0])
 
-        collection.update(
-            {'_id': article['_id']},
-            {'$set': {
-                'topicid': topicid,
-                'topic_text': topic,
-                'topic_guess': topics[topicid]
-            }}
-        )
+            collection.update(
+                {'_id': article['_id']},
+                {'$set': {
+                    'topicid': topicid,
+                    'topic_text': topic,
+                    'topic_guess': topics[topicid]
+                }}
+            )
 
 
 
 def splitWord(sentence):
-    sentence = sentence.split("[", 1)[1]
+    if u']' in sentence:
+        sentence = sentence.split("]", 1)[1]
 
     nWord = []
     for word, flag in pseg.cut(sentence):

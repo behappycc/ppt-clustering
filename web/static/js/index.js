@@ -43,28 +43,28 @@ $(document).ready(function() {
 */
 
   var density = {
-    "臺北市": 9952.60,
-    "嘉義市": 4512.66,
-    "新竹市": 4151.27,
-    "基隆市": 2809.27,
-    "新北市": 1932.91,
-    "桃園市": 1692.09,
-    "臺中市": 1229.62,
-    "彰化縣": 1201.65,
-    "高雄市": 942.97,
-    "臺南市": 860.02,
-    "金門縣": 847.16,
-    "澎湖縣": 802.83,
-    "雲林縣": 545.57,
+    "台北": 9952.60,
+    "嘉義": 4512.66,
+    "新竹": 4151.27,
+    "基隆": 2809.27,
+    "台北": 1932.91,
+    "桃園": 1692.09,
+    "台中": 1229.62,
+    "彰化": 1201.65,
+    "高雄": 942.97,
+    "台南": 860.02,
+    "金門": 847.16,
+    "澎湖": 802.83,
+    "雲林": 545.57,
     "連江縣": 435.21,
-    "新竹縣": 376.86,
-    "苗栗縣": 311.49,
-    "屏東縣": 305.03,
-    "嘉義縣": 275.18,
-    "宜蘭縣": 213.89,
-    "南投縣": 125.10,
-    "花蓮縣": 71.96,
-    "臺東縣": 63.75
+    "新竹": 376.86,
+    "苗栗": 311.49,
+    "屏東": 305.03,
+    "嘉義": 275.18,
+    "宜蘭": 213.89,
+    "南投": 125.10,
+    "花蓮": 71.96,
+    "台東": 63.75
   };
   d3.json("static/json/county.json", function(topodata) {
     var features = topojson.feature(topodata, topodata.objects.county).features;
@@ -85,8 +85,28 @@ $(document).ready(function() {
       }).on("mouseover", function(d) {
         $("#name").text(d.properties.C_Name);
         $("#density").text(d.density);
+        //console.log(d.properties.C_Name)
+        var data = {
+          key1: d.properties.C_Name,
+          key2: '2'
+        };
+        var dataToSend = JSON.stringify(data);
+        $.ajax(
+          {
+              url: '/index',
+              type: 'POST',
+              data: dataToSend,
+              success: function (jsonResponse) {
+                var objresponse = JSON.parse(jsonResponse);
+                console.log(objresponse['topic']);
+                $("#topic").text(objresponse['topic']);
+              },
+              error: function () {
+                $("#topic").text("");
+                   }
+              });
+        });
 
-      });
     }
     d3.select("svg").on("mousemove", function() {
       fisheye.focus(d3.mouse(this));

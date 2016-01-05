@@ -16,14 +16,15 @@ def main():
 	articles = collection.find()
 
 	for article in articles:
-		school_data = findip.findIP_School(article['ip'])
+		if 'school_data' not in article:
+			school_data = findip.findIP_School(article['ip'])
 
-		try:
-			collection.update({'_id':article['_id']}, {'$set':school_data})
-		except pymongo.errors.CursorNotFound:
-			print "No article in database"
+			try:
+				collection.update({'_id':article['_id']}, {'$set':school_data})
+			except pymongo.errors.CursorNotFound:
+				print "No article in database"
 
-		print article['article_title'], article['ip'], school_data['school'], school_data['place']
+			print article['article_title'], article['ip'], school_data['school'], school_data['place']
 
 
 if __name__ == '__main__':

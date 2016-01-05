@@ -5,18 +5,13 @@ import time
 
 import jieba
 import jieba.posseg as pseg
+jieba.load_userdict("gossipingDict.txt")
 import extraDict
 import operator
 from gensim import corpora, models, similarities  
 
 import pymongo
 from pymongo import MongoClient
-
-
-
-
-jieba.load_userdict("gossipingDict.txt")
-
 
 
 def main():
@@ -44,12 +39,14 @@ dictionary = ""
 word2vec = ""
 
 def splitWord(sentence):
-    sentence = sentence.split("[", 1)[0]
-
+    if u']' in sentence:
+        sentence = sentence.split("]", 1)[1]
+    #print '---',sentence
     nWord = []
     for word, flag in pseg.cut(sentence):
         if(flag in ['n', 'v', 'a', 'ns', 'nt', 'nz']) and (len(word)>1):
             nWord.append(word)
+
     return nWord
 
 
@@ -82,6 +79,7 @@ def learnLDA(collection):
     dictionary.save(board + '/' + board + '_dict.model')
     lda.save(board + '/' + board + '_lda.model')
     word2vec.save(board + '/' + board + '_word2vec.model')
+    
     print "learning finish"
 
 

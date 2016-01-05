@@ -1,12 +1,59 @@
 <html>
-   <head>
-      <title>{{ title }}</title>
-   </head>
-   <body>
-     <ul>
-       {% for ab in abc %}
-         <li>{{ escape(ab) }}</li>
-       {% end %}
-     </ul>
-   </body>
- </html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<style type="text/css">
+#container{
+    border:1px #666 dashed;
+    width:500px;
+    margin:0 auto;
+}
+#headbox{
+    width:490px;
+    height:60px;
+    border:1px #666 dashed;
+    margin:0 auto;
+    margin-top:5px;
+    margin-bottom:5px;
+}
+#sidebar{
+    width:190px;
+    height:260px;
+    border:1px #666 dashed;
+    margin-left:5px;
+    margin-top:5px;
+    margin-bottom:5px;
+    float:left;
+}
+#sidebody{
+    width:290px;
+    height:260px;
+    border:1px #666 dashed;
+    margin-left:5px;
+    margin-top:5px;
+    margin-bottom:5px;
+    float:left;
+}
+#clear{
+    clear:both;
+}
+#footer{
+    width:490px;
+    height:60px;
+    border:1px #666 dashed;
+    margin-top:5px;
+    margin-left:5px;
+    margin-bottom:5px;
+}
+</style>
+<div id="container">
+    <div id="headbox"></div>
+    <div id="sidebar"></div>
+    <div id="sidebody"></div>
+    <div id="clear"></div>
+    <div id="footer"></div>
+</div>
+</body>
+</html>
