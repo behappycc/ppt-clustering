@@ -99,7 +99,8 @@ def statisticTopicFast(board):
     collection = client['Ptt']['Weekarticle' + board]
 
     list7Topic = []
-    dest_time = datetime.now() - timedelta(days=7)
+    #dest_time = datetime.now() - timedelta(days=7)
+    dest_time = datetime.now() - timedelta(days=180)
     articles = collection.find({'date':{'$gt':dest_time}})
 
     for article in articles:
