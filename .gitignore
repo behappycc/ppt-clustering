@@ -62,3 +62,7 @@ Account.py
 #model
 *.model
 *.state
+
+#Gossiping
+src/Gossiping/
+src/OtsukaAi/
